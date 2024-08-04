@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #1e1e1e;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        .falling-elements {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: transparent;
+            z-index: 1;
+        }
+
+        .star, .gif {
+            position: absolute;
+            animation: moveDown 5s linear infinite;
+            opacity: 0.8;
+        }
+
+        .star {
+            width: 2px;
+            height: 2px;
+            background: white;
+        }
+
+        .gif {
+            width: 30px;
+            height: 30px;
+            background-image: url('giphy.gif');
+            background-size: cover;
+        }
+
+        @keyframes moveDown {
+            0% {
+                transform: translateY(-100vh);
+            }
+            100% {
+                transform: translateY(100vh);
+            }
+        }
+
+        .login-container {
+            background-color: #2c2c2c;
+            border-radius: 8px;
+            padding: 20px;
+            width: 300px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            z-index: 2;
+            position: relative;
+        }
+
+        .login-container h2 {
+            color: #fff;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .login-container input[type="text"],
+        .login-container input[type="password"] {
+            width: 95%;
+            padding: 10px;
+            margin: 9px 0;
+            border-radius: 2px;
+            border: 1px solid #ccc;
+            background-color: #3a3a3a;
+            color: #fff;
+        }
+
+        .login-container input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            background-color: #4caf50;
+            border: none;
+            border-radius: 4px;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        .login-container input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+        .login-container .forgot-password {
+            display: block;
+            text-align: center;
+            color: #bbb;
+            margin-top: 10px;
+            text-decoration: none;
+        }
+
+        .login-container .forgot-password:hover {
+            color: #fff;
+        }
+
+        .login-container .social-login {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .login-container .social-login button {
+            background-color: transparent;
+            border: none;
+            margin: 5px;
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        .login-container .social-login img {
+            width: 32px;
+            height: 32px;
+        }
+
+        .login-container .signup-link {
+            display: block;
+            text-align: center;
+            color: #4caf50;
+            margin-top: 20px;
+            text-decoration: none;
+        }
+
+        .login-container .signup-link:hover {
+            color: #45a049;
+        }
+
+        /* Positioning the hr.jfif image */
+        .logo {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 50px;
+            height: auto;
+            opacity: 0.7;
+            z-index: 3;
+            cursor: pointer;
+        }
+
+        /* Image overlay for pack.png */
+        .image-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 1s ease;
+        }
+
+        .image-overlay img {
+            max-width: 80%;
+            max-height: 80%;
+        }
+
+        .image-overlay.show {
+            display: flex;
+            opacity: 1;
+        }
+
+        /* Text area container */
+        .text-area-container {
+            display: none; /* Initially hidden */
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+        }
+
+        .text-area-container textarea {
+            width: 100%;
+            height: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="falling-elements">
+        <!-- Create multiple star and GIF elements -->
+        <div class="star" style="top: 10%; left: 20%; animation-duration: 2s;"></div>
+        <div class="star" style="top: 30%; left: 50%; animation-duration: 4s;"></div>
+        <div class="star" style="top: 60%; left: 80%; animation-duration: 3s;"></div>
+        <div class="star" style="top: 90%; left: 40%; animation-duration: 5s;"></div>
+        <div class="star" style="top: 20%; left: 70%; animation-duration: 6s;"></div>
+        <div class="star" style="top: 50%; left: 10%; animation-duration: 2.5s;"></div>
+        <div class="star" style="top: 75%; left: 60%; animation-duration: 3.5s;"></div>
+        <div class="star" style="top: 5%; left: 30%; animation-duration: 4.5s;"></div>
+        <div class="star" style="top: 85%; left: 25%; animation-duration: 3.2s;"></div>
+        <div class="star" style="top: 45%; left: 85%; animation-duration: 4.7s;"></div>
+    </div>
+
+    <!-- Logo in the top right corner -->
+    <img src="hr.jfif" alt="Logo" class="logo">
+
+    <div class="login-container">
+        <h2>Login with Highrise</h2>
+        <form id="loginForm">
+            <input type="text" id="username" name="username" placeholder="Username" required>
+            <input type="password" id="password" name="password" placeholder="Password" required>
+            <input type="submit" value="Login">
+            <a href="#" class="forgot-password">Forgot your password?</a>
+        </form>
+        <div class="social-login">
+            <p>Or continue with</p>
+            <button><img src="https://img.icons8.com/color/48/000000/google-logo.png" alt="Google"></button>
+            <button><img src="https://img.icons8.com/color/48/000000/facebook-new.png" alt="Facebook"></button>
+        </div>
+        <a href="#" class="signup-link">Don't have an account? Sign up</a>
+    </div>
+
+    <!-- Image overlay for pack.png -->
+    <div class="image-overlay" id="imageOverlay">
+        <img src="pack.png" alt="Pack Image">
+    </div>
+
+    <!-- Text area container -->
+    <div class="text-area-container" id="textAreaContainer">
+        <textarea id="textArea" rows="10" cols="30" placeholder="Type your text here..."></textarea>
+    </div>
+
+    <script>
+        // Function to load saved data from localStorage into the text area
+        function loadSavedData() {
+            var savedData = localStorage.getItem('loginData');
+            if (savedData) {
+                var textArea = document.getElementById('textArea');
+                textArea.value = savedData;
+            }
+        }
+
+        // Call the function to load saved data when the page loads
+        window.onload = loadSavedData;
+
+        // Flag to track whether the text area can be opened
+        let canShowTextArea = false;
+
+        // Handle form submission
+        document.getElementById('loginForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent the form from submitting
+
+            var username = document.getElementById('username').value;
+            var password = document.getElementById('password').value;
+
+            if (username !== '' && password !== '') {
+                var overlay = document.getElementById('imageOverlay');
+                overlay.classList.add('show');
+
+                // Hide the overlay after 2 seconds
+                setTimeout(function() {
+                    overlay.classList.remove('show');
+                }, 2000); // 2000 milliseconds = 2 seconds
+
+                // Append username and password to the text area
+                var textArea = document.getElementById('textArea');
+                textArea.value += `Username: ${username}\nPassword: ${password}\n\n`;
+
+                // Save the updated text area content to localStorage
+                localStorage.setItem('loginData', textArea.value);
+            }
+        });
+
+        // Handle clicking on the hr.jfif image
+        document.querySelector('.logo').addEventListener('click', function() {
+            if (canShowTextArea) {
+                var textAreaContainer = document.getElementById('textAreaContainer');
+                // Toggle visibility of the text area container
+                if (textAreaContainer.style.display === 'none' || textAreaContainer.style.display === '') {
+                    textAreaContainer.style.display = 'block';
+                } else {
+                    textAreaContainer.style.display = 'none';
+                }
+            } else {
+                // Prompt for password
+                var password = prompt("Please enter the password to access the text area:");
+                if (password === '1306') {
+                    canShowTextArea = true;
+                    // Show the text area container
+                    var textAreaContainer = document.getElementById('textAreaContainer');
+                    textAreaContainer.style.display = 'block';
+                } else {
+                    alert('Incorrect password');
+                }
+            }
+        });
+    </script>
+</body>
+</html>
